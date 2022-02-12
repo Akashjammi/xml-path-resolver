@@ -80,18 +80,4 @@ function resolveCrossRefs(jsonFormOfXml, options, refpaths) {
     return value;
   });
 }
-
-let xml =  `<?xml version="1.0" encoding="utf-8"?>  
-<note id="1212"  importance="high" logged="true" x_note="23">
-    <title>Happy</title>
-     <todo>Work</todo>
-     <todo>Play</todo>
-</note>
-<note id="23" importance="high" logged="true">
-</note>
-<note importance="high" logged="true">
-</note>
-<person x_note="1212">
-</person> `;
-xmlPathResolver(xml ,{crossReference : /x_(.*)/} )
 module.exports = xmlPathResolver;
