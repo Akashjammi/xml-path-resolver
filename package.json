@@ -1,0 +1,29 @@
+{
+  "name": "xml-path-resolver",
+  "version": "1.0.0",
+  "description": "Resolves xml paths even with cross reference",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akashjammi/xml-path-resolver.git"
+  },
+  "keywords": [
+    "xml",
+    "path",
+    "xml-path",
+    "xml-path-resolver"
+  ],
+  "author": "Akash JP,Gokulnath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akashjammi/xml-path-resolver/issues"
+  },
+  "homepage": "https://github.com/Akashjammi/xml-path-resolver#readme",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "xml-js": "^1.6.11"
+  }
+}
