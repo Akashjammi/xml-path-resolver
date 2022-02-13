@@ -9,6 +9,9 @@ const _ = require("lodash");
  */
 const xmlPathResolver = (xml, options = {}) => {
   try {
+    if (!xml) {
+      throw new Error("First argument should have xml");
+    }
     let jsonFormOfXml = convert.xml2json(xml, { compact: true, spaces: 4 });
     let refpaths = extractArrayPaths(JSON.parse(jsonFormOfXml)).arrayPaths;
     let modifiedJson = resolveCrossRefs(jsonFormOfXml, options, refpaths);
@@ -26,7 +29,7 @@ function extractArrayPaths(obj, prefix, current, arrayPaths) {
 
     if (typeof (obj) === 'object' && obj !== null && !_.isArray(obj)) {
       Object.keys(obj).forEach(key => {
-        extractArrayPaths(obj[key], prefix.concat(key), current, arrayPaths).current
+        extractArrayPaths(obj[key], prefix.concat(key), current, arrayPaths);
       });
     }
     else if (_.isArray(obj)) {
@@ -56,7 +59,7 @@ function extractArrayPaths(obj, prefix, current, arrayPaths) {
   }
 }
 
-function resolveCrossRefs(jsonFormOfXml, options, refpaths,level=0) {
+function resolveCrossRefs(jsonFormOfXml, options, refpaths, level = 0) {
   try {
     return JSON.parse(jsonFormOfXml, (key, value) => {
       if (options.crossReference && options.crossReference instanceof RegExp) {
@@ -69,11 +72,11 @@ function resolveCrossRefs(jsonFormOfXml, options, refpaths,level=0) {
                 let extractedRefsValue = refpaths[path].filter((path) => {
                   return path._attributes.id === value;
                 });
-                extractedRefsValue = _.get(extractedRefsValue,"0",value);
-                if(level>150){
+                extractedRefsValue = _.get(extractedRefsValue, "0", value);
+                if (level > 150) {
                   throw new Error("Nesting level threshold reached");
                 }
-                let resolvedRefs = resolveCrossRefs(JSON.stringify(extractedRefsValue), options, refpaths,level+1);
+                let resolvedRefs = resolveCrossRefs(JSON.stringify(extractedRefsValue), options, refpaths, level + 1);
                 return resolvedRefs;
               }
             } catch (err) {
