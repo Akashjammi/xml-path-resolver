@@ -94,3 +94,84 @@ test('convert xml with cross reference', () => {
     }
     expect(resolvedJSON).toMatchObject(expectedResponse);
 });
+
+test('convert xml without cross reference', () => {
+    const xmlString = `
+        <?xml version="1.0" encoding="utf-8"?>  
+        <note id="1212"  importance="high" logged="true">
+        <title>Happy</title>
+         <todo>Work</todo>
+         <todo>Play</todo>
+        </note>
+        <note id="23" importance="high" logged="true">
+        </note>
+        <note importance="high" logged="true">
+        </note>
+        <person id="1">
+        </person>`;
+    const resolvedJSON = xmlPathResolver(xmlString, { crossReference: /x_(.*)/ });
+    let expectedResponse = {
+        "_declaration": {
+            "_attributes": {
+                "version": "1.0",
+                "encoding": "utf-8"
+            }
+        },
+        "note": [
+            {
+                "_attributes": {
+                    "id": "1212",
+                    "importance": "high",
+                    "logged": "true",
+                },
+                "title": {
+                    "_text": "Happy"
+                },
+                "todo": [
+                    {
+                        "_text": "Work"
+                    },
+                    {
+                        "_text": "Play"
+                    }
+                ]
+            },
+            {
+                "_attributes": {
+                    "id": "23",
+                    "importance": "high",
+                    "logged": "true"
+                }
+            },
+            {
+                "_attributes": {
+                    "importance": "high",
+                    "logged": "true"
+                }
+            }
+        ],
+        "person": {
+            "_attributes": {
+            }
+        }
+    }
+    expect(resolvedJSON).toMatchObject(expectedResponse);
+});
+
+test('convert xml without cross reference', () => {
+    const xmlString = `
+        xml version="1.0" encoding="utf-8"?>  
+        <note id="1212"  importance="high" logged="true">
+        <title>Happy</title>
+         <todo>Work</todo>
+         <todo>Play</todo>
+        </note>
+        <note id="23" importance="high" logged="true">
+        </note>
+        <note importance="high" logged="true">
+        </note>
+        <person id="1">
+        </person>`;
+
+    expect(() => xmlPathResolver(xmlString, { crossReference: /x_(.*)/ })).toThrow();
+});
