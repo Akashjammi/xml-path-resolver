@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const convert = require("xml-js");
 const _ = require("lodash");
 /**
@@ -14,18 +15,18 @@ const xmlPathResolver = (xml, options = {}) => {
     return modifiedJson;
   } catch (Err) {
     console.log(`error in xmlpathresolver`, Err);
-    return Err;
+    throw Err;
   }
 };
 function extractArrayPaths(obj, prefix, current, arrayPaths) {
-  prefix = prefix || []
-  current = current || {}
-  arrayPaths = arrayPaths || {}
+  prefix = prefix || [];
+  current = current || {};
+  arrayPaths = arrayPaths || {};
 
   if (typeof (obj) === 'object' && obj !== null && !_.isArray(obj)) {
     Object.keys(obj).forEach(key => {
       extractArrayPaths(obj[key], prefix.concat(key), current, arrayPaths).current
-    })
+    });
   }
   else if (_.isArray(obj)) {
     let lastPrefix = prefix[prefix.length-1];
@@ -36,7 +37,7 @@ function extractArrayPaths(obj, prefix, current, arrayPaths) {
     }
   }
   else {
-    current[prefix.join('.')] = obj
+    current[prefix.join('.')] = obj;
   }
   if(_.isObject(obj) && !_.isArray(obj)){
     let lastPrefix = prefix[prefix.length-1];
@@ -48,7 +49,7 @@ function extractArrayPaths(obj, prefix, current, arrayPaths) {
     }
   }
 
-  return { current, arrayPaths }
+  return { current, arrayPaths };
 }
 
 function resolveCrossRefs(jsonFormOfXml, options, refpaths) {
@@ -61,12 +62,11 @@ function resolveCrossRefs(jsonFormOfXml, options, refpaths) {
           try {
             if (refpaths[path]) {
               let extractedRefsValue = refpaths[path].filter((path) => {
-                return path._attributes.id === value
+                return path._attributes.id === value;
               })[0];
-              console.log(`extractedRefsValue`, extractedRefsValue);
               let resolvedRefs = resolveCrossRefs(JSON.stringify(extractedRefsValue), options, refpaths);
               return resolvedRefs;
-            };
+            }
           } catch (err) {
             return value;
           }

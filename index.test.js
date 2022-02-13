@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const xmlPathResolver = require('./index');
 
 test('convert xml with cross reference', () => {
@@ -158,7 +159,7 @@ test('convert xml without cross reference', () => {
     expect(resolvedJSON).toMatchObject(expectedResponse);
 });
 
-test('convert xml without cross reference', () => {
+test('Throw error for invalid xml', () => {
     const xmlString = `
         xml version="1.0" encoding="utf-8"?>  
         <note id="1212"  importance="high" logged="true">
@@ -171,7 +172,9 @@ test('convert xml without cross reference', () => {
         <note importance="high" logged="true">
         </note>
         <person id="1">
-        </person>`;
+        </person>
+        invalid xml here
+        `;
 
     expect(() => xmlPathResolver(xmlString, { crossReference: /x_(.*)/ })).toThrow();
 });
