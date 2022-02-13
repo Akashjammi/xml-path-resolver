@@ -10,9 +10,7 @@ const xmlPathResolver = (xml, options = {}) => {
   try {
     let jsonFormOfXml = convert.xml2json(xml, { compact: true, spaces: 4 });
     let refpaths = extractArrayPaths(JSON.parse(jsonFormOfXml)).arrayPaths;
-    console.log(`refpaths`, refpaths);
     let modifiedJson = resolveCrossRefs(jsonFormOfXml, options, refpaths);
-    console.log(JSON.stringify(modifiedJson));
     return modifiedJson;
   } catch (Err) {
     console.log(`error in xmlpathresolver`, Err);
