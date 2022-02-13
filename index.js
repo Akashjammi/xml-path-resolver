@@ -70,7 +70,7 @@ function resolveCrossRefs(jsonFormOfXml, options, refpaths,level=0) {
                   return path._attributes.id === value;
                 });
                 extractedRefsValue = _.get(extractedRefsValue,"0",value);
-                if(level>50){
+                if(level>150){
                   throw new Error("Nesting level threshold reached");
                 }
                 let resolvedRefs = resolveCrossRefs(JSON.stringify(extractedRefsValue), options, refpaths,level+1);
