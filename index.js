@@ -56,7 +56,7 @@ function extractArrayPaths(obj, prefix, current, arrayPaths) {
   }
 }
 
-function resolveCrossRefs(jsonFormOfXml, options, refpaths) {
+function resolveCrossRefs(jsonFormOfXml, options, refpaths,level=0) {
   try {
     return JSON.parse(jsonFormOfXml, (key, value) => {
       if (options.crossReference && options.crossReference instanceof RegExp) {
@@ -68,12 +68,16 @@ function resolveCrossRefs(jsonFormOfXml, options, refpaths) {
               if (refpaths[path]) {
                 let extractedRefsValue = refpaths[path].filter((path) => {
                   return path._attributes.id === value;
-                })[0];
-                let resolvedRefs = resolveCrossRefs(JSON.stringify(extractedRefsValue), options, refpaths);
+                });
+                extractedRefsValue = _.get(extractedRefsValue,"0",value);
+                if(level>50){
+                  throw new Error("Nesting level threshold reached");
+                }
+                let resolvedRefs = resolveCrossRefs(JSON.stringify(extractedRefsValue), options, refpaths,level+1);
                 return resolvedRefs;
               }
             } catch (err) {
-              return value;
+              throw err;
             }
           }
           return value;

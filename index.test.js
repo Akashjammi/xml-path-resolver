@@ -317,12 +317,35 @@ test('Throw error for invalid xml', () => {
         </note>
         <person id="1">
         </person>
-        invalid xml here
+        
         `;
 
     expect(() => xmlPathResolver(xmlString, { crossReference: /x_(.*)/ })).toThrow();
 });
 
-test('Throw error for no xml', () => { 
-    expect(() => xmlPathResolver().toThrow());
+test('Throw error for no xml', () => {
+    expect(() => xmlPathResolver()).toThrow();
+});
+
+
+test('Throw error for infinite reference ', () => {
+    const xmlString = `
+        <?xml version="1.0" encoding="utf-8"?>  
+        <note id="1212"  importance="high" logged="true" x_note="23">
+        <title>Happy</title>
+         <todo>Work</todo>
+         <todo>Play</todo>
+        </note>
+        <note id="23" importance="high" logged="true" x_note="1212">
+        </note>
+        <note importance="high" logged="true">
+        </note>`
+        ;
+    expect(() => {
+        try {
+            let json = xmlPathResolver(xmlString, { crossReference: /x_(.*)/ });
+        } catch (err) {
+            throw err;
+        }
+    }).toThrow();
 });
