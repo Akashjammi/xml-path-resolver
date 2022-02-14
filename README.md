@@ -1,7 +1,7 @@
 # xml-path-resolver
 This npm module is used to convert xml to json after resolving the cross reference.
 
-The cross reference keys in xml can be identified by the regex .
+The cross reference keys in xml can be identified by the regex .If crossRefKey is not mentioned, default value would be "id".
 
 ### USAGE
 ```
@@ -24,7 +24,7 @@ const xmlString = `
 <person x_note="1212">
 </person>
 `;
-const resolvedJSON = xmlPathResolver(xmlString,{ crossReference: /x_(.*)/ });
+const resolvedJSON = xmlPathResolver(xmlString,{ crossRefKey: "id", crossReference: /x_(.*)/ });
 
 ```
 

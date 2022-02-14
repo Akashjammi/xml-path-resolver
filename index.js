@@ -7,14 +7,14 @@ const _ = require("lodash");
  * @param {JSON} options (Optional)
  * @param options.crossReference {Regex} example x_(.*)
  */
-const xmlPathResolver = (xml, options = {}) => {
+const xmlPathResolver = (xml, { crossRefKey = "id" , ...rest } = {}) => {
   try {
     if (!xml) {
       throw new Error("First argument should have xml");
     }
     let jsonFormOfXml = convert.xml2json(xml, { compact: true, spaces: 4 });
     let refpaths = extractArrayPaths(JSON.parse(jsonFormOfXml)).arrayPaths;
-    let modifiedJson = resolveCrossRefs(jsonFormOfXml, options, refpaths);
+    let modifiedJson = resolveCrossRefs(jsonFormOfXml, { crossRefKey, ...rest }, refpaths);
     return modifiedJson;
   } catch (Err) {
     console.log(`error in xmlpathresolver`, Err);
@@ -70,7 +70,7 @@ function resolveCrossRefs(jsonFormOfXml, options, refpaths, level = 0) {
             try {
               if (refpaths[path]) {
                 let extractedRefsValue = refpaths[path].filter((path) => {
-                  return path._attributes.id === value;
+                  return path._attributes[options.crossRefKey] === value;
                 });
                 extractedRefsValue = _.get(extractedRefsValue, "0", value);
                 if (level > 150) {
